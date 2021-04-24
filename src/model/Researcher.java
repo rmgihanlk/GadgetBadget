@@ -19,7 +19,7 @@ public class Researcher {
 		}
 		return con;
 	}
-
+ 
 	public String insertResearcher(String RID, String name, String address, String phone, String email) {
 		String output = "";
 		try {

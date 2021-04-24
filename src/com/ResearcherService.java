@@ -30,8 +30,8 @@ public class ResearcherService {
 	@Produces(MediaType.TEXT_HTML)
 	public String readResearchers() {
 		return ResearcherObj.readResearchers();
-	}
-
+	} 
+	
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
