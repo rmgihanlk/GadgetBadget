@@ -21,8 +21,7 @@ import model.Funder;
 
 @Path("/Funder")
 public class FunderService {
-	
-	
+
 	Funder funderObj = new Funder();
 
 	@GET
@@ -36,9 +35,9 @@ public class FunderService {
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String insertFunder(@FormParam("FID") String FID, @FormParam("amount") String amount,
-			@FormParam("details") String details) {
-		String output = funderObj.insertFunder(FID, amount,details);
+	public String insertFunder(@FormParam("FID") String FID, @FormParam("name") String name,
+			@FormParam("amount") String amount, @FormParam("phone") String phone, @FormParam("email") String email) {
+		String output = funderObj.insertFunder(FID, name, amount, phone, email);
 		return output;
 	}
 
@@ -47,13 +46,13 @@ public class FunderService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateFunder(String funderData) {
-		// Convert the input string to a JSON object
 		JsonObject funderObject = new JsonParser().parse(funderData).getAsJsonObject();
-		// Read the values from the JSON object
 		String FID = funderObject.get("FID").getAsString();
+		String name = funderObject.get("name").getAsString();
 		String amount = funderObject.get("amount").getAsString();
-		String details = funderObject.get("details").getAsString();
-		String output = funderObj.updateFunder(FID, amount, details);
+		String phone = funderObject.get("phone").getAsString();
+		String email = funderObject.get("email").getAsString();
+		String output = funderObj.updateFunder(FID, name, amount, phone, email);
 		return output;
 	}
 
@@ -62,9 +61,8 @@ public class FunderService {
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String deleteFunder(String funderData) {
-		// Convert the input string to an XML document
 		Document doc = Jsoup.parse(funderData, "", Parser.xmlParser());
-		
+
 		String FID = doc.select("FID").text();
 		String output = funderObj.deleteFunder(FID);
 		return output;

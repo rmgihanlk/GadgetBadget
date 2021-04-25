@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class Funder {
-		
+
 	private Connection connect() {
 		Connection con = null;
 		try {
@@ -18,8 +18,8 @@ public class Funder {
 		}
 		return con;
 	}
-	
-	public String insertFunder(String FID, String amount, String details) {
+
+	public String insertFunder(String FID, String name, String amount, String phone, String email) {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -27,12 +27,14 @@ public class Funder {
 				return "Error while connecting to the database for inserting.";
 			}
 
-			String query = " insert into funder(`FID`,`amount`,`details`)  values (?, ?, ?)";
+			String query = " insert into funder(`FID`,`name`,`amount`,`phone`,`email`)  values (?, ?, ?, ?, ?)";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 
-			preparedStmt.setString(1, FID);preparedStmt.setInt(1, 0);
-			preparedStmt.setDouble(2, Double.parseDouble(amount));
-			preparedStmt.setString(3, details);
+			preparedStmt.setString(1, FID);
+			preparedStmt.setString(2, name);
+			preparedStmt.setDouble(3, Double.parseDouble(amount));
+			preparedStmt.setString(4, phone);
+			preparedStmt.setString(5, email);
 			preparedStmt.execute();
 			con.close();
 			output = "Inserted successfully";
@@ -42,7 +44,7 @@ public class Funder {
 		}
 		return output;
 	}
-	
+
 	public String readFunders() {
 		String output = "";
 		try {
@@ -51,23 +53,27 @@ public class Funder {
 				return "Error while connecting to the database for reading.";
 			}
 
-			output = "<table border='1'><tr><th>FID </th><th>amount</th>" + "<th>details</th>"
-					+ "<th>Update</th><th>Remove</th></tr>";
+			output = "<table border='1'><tr><th>FID </th><th>name</th><th>amount</th>" + "<th>phone</th>"
+					+ "<th>email</th>" + "<th>Update</th><th>Remove</th></tr>";
 			String query = "select * from funder";
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
 				String FID = rs.getString("FID");
+				String name = rs.getString("name");
 				String amount = Double.toString(rs.getDouble("amount"));
-				String details = rs.getString("details");
+				String phone = rs.getString("phone");
+				String email = rs.getString("email");
 
 				output += "<tr><td>" + FID + "</td>";
+				output += "<td>" + name + "</td>";
 				output += "<td>" + amount + "</td>";
-				output += "<td>" + details + "</td>";
+				output += "<td>" + phone + "</td>";
+				output += "<td>" + email + "</td>";
 
 				output += "<td><input name='btnUpdate' type='button' value='Update'class='btn btn-secondary'></td>"
-						+ "<td><form method='post' action='items.jsp'>"
+						+ "<td><form method='post' action='funder.jsp'>"
 						+ "<input name='btnRemove' type='submit' value='Remove'class='btn btn-danger'>"
 						+ "<input name='FID' type='hidden' value='" + FID + "'>" + "</form></td></tr>";
 			}
@@ -75,13 +81,13 @@ public class Funder {
 
 			output += "</table>";
 		} catch (Exception e) {
-			output = "Error while reading the items.";
+			output = "Error while reading the Funder.";
 			System.err.println(e.getMessage());
 		}
 		return output;
 	}
 
-	public String updateFunder(String FID, String amount, String details) {
+	public String updateFunder(String FID, String name, String amount, String phone, String email) {
 		String output = "";
 		try {
 			Connection con = connect();
@@ -89,18 +95,19 @@ public class Funder {
 				return "Error while connecting to the database for updating.";
 			}
 
-			String query = "UPDATE funder SET FID=?,amount=?,details=?";
+			String query = "UPDATE funder SET name=?,amount=?,phone=?,email=? WHERE FID=?";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 
-			preparedStmt.setString(1, FID);
+			preparedStmt.setString(1, name);
 			preparedStmt.setDouble(2, Double.parseDouble(amount));
-			preparedStmt.setString(3, details);
-			
+			preparedStmt.setString(3, phone);
+			preparedStmt.setString(4, email);
+			preparedStmt.setString(5, FID);
 			preparedStmt.execute();
 			con.close();
 			output = "Updated successfully";
 		} catch (Exception e) {
-			output = "Error while updating the item.";
+			output = "Error while updating the Funder.";
 			System.err.println(e.getMessage());
 		}
 		return output;
@@ -123,7 +130,7 @@ public class Funder {
 			con.close();
 			output = "Deleted successfully";
 		} catch (Exception e) {
-			output = "Error while deleting the item.";
+			output = "Error while deleting the Funder.";
 			System.err.println(e.getMessage());
 		}
 		return output;
